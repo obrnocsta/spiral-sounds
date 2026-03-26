@@ -1,6 +1,7 @@
 import validator from "validator";
+import { getDatabaseConnection } from "../database/db.js";
 
-export const registerUser = (req, res) => {
+export const registerUser = async (req, res) => {
   let { name, email, username, password } = req.body;
 
   if (!name || !email || !username || !password) {
@@ -22,5 +23,25 @@ export const registerUser = (req, res) => {
     return res.status(400).json({ error: "Invalid email format" });
   }
 
-  res.send(req.body);
+  const db = await getDatabaseConnection();
+  try {
+    const hasUser = await db.get(
+      `SELECT id FROM users WHERE username = ? OR email = ?`,
+      [username, email],
+    );
+    if (hasUser) {
+      res.status(400).json({ error: "Email or username already in use." });
+      return;
+    }
+    await db.run(
+      `INSERT INTO users (name, email, username, password) VALUES (?, ?, ?, ?)`,
+      [name, email, username, password],
+    );
+    res.status(201).json({ message: "User registered" });
+  } catch (error) {
+    console.error(`Registration failed: ${error.message}`);
+    res.status(500).json({ error: "Registration failed. Please try again." });
+  } finally {
+    await db.close();
+  }
 };
