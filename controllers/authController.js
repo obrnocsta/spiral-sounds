@@ -1,4 +1,5 @@
 import validator from "validator";
+import bcrypt from "bcryptjs";
 import { getDatabaseConnection } from "../database/db.js";
 
 export const registerUser = async (req, res) => {
@@ -23,6 +24,8 @@ export const registerUser = async (req, res) => {
     return res.status(400).json({ error: "Invalid email format" });
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const db = await getDatabaseConnection();
   try {
     const hasUser = await db.get(
@@ -35,7 +38,7 @@ export const registerUser = async (req, res) => {
     }
     await db.run(
       `INSERT INTO users (name, email, username, password) VALUES (?, ?, ?, ?)`,
-      [name, email, username, password],
+      [name, email, username, hashedPassword],
     );
     res.status(201).json({ message: "User registered" });
   } catch (error) {
