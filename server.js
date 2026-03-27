@@ -23,9 +23,9 @@ app.use(
 );
 app.use(express.static("public"));
 
+app.use("/api/products", productsRouter);
 app.use("/api/auth/me", meRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/products", productsRouter);
 
 app
   .listen(PORT, () => {
