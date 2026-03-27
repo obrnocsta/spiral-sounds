@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import session from "express-session";
+import { meRouter } from "./routes/me.js";
 import { authRouter } from "./routes/auth.js";
 import { productsRouter } from "./routes/products.js";
 
@@ -22,6 +23,7 @@ app.use(
 );
 app.use(express.static("public"));
 
+app.use("/api/auth/me", meRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
 

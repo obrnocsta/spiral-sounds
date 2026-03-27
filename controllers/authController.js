@@ -41,7 +41,6 @@ export const registerUser = async (req, res) => {
       [name, email, username, hashedPassword],
     );
     req.session.userId = newUser.lastID;
-    console.log(newUser);
     res.status(201).json({ message: "User registered" });
   } catch (error) {
     console.error(`Registration failed: ${error.message}`);
