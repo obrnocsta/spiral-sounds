@@ -1,43 +1,19 @@
-import { getDatabaseConnection } from "../database/db.js";
+import { genres, products } from "../services/productsServices.js";
 
-export async function getGenres(req, res) {
+export const getGenres = async (req, res) => {
   try {
-    const db = await getDatabaseConnection();
-
-    const genreRows = await db.all("SELECT DISTINCT genre FROM products");
-    const genres = genreRows.map((row) => row.genre);
-    res.json(genres);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch genres", details: err.message });
+    const data = await genres();
+    res.json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
-}
+};
 
-export async function getProducts(req, res) {
+export const getProducts = async (req, res) => {
   try {
-    const db = await getDatabaseConnection();
-
-    let query = "SELECT * FROM products";
-    let params = [];
-
-    const { genre, search } = req.query;
-
-    if (genre) {
-      query += " WHERE genre = ?";
-      params.push(genre);
-    } else if (search) {
-      query += " WHERE title LIKE ? OR artist LIKE ? OR genre LIKE ?";
-      const searchPattern = `%${search}%`;
-      params.push(searchPattern, searchPattern, searchPattern);
-    }
-
-    const products = await db.all(query, params);
-
-    res.json(products);
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch products", details: err.message });
+    const data = await products(req.query);
+    res.json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
-}
+};
