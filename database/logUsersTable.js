@@ -1,12 +1,10 @@
 import { getDatabaseConnection } from "./db.js";
 
-async function logTable() {
+async function logUsersTable() {
   const db = await getDatabaseConnection();
 
-  const tableName = "users";
-
   try {
-    const table = await db.all(`SELECT * FROM ${tableName}`);
+    const table = await db.all(`SELECT * FROM users`);
     console.table(table);
   } catch (err) {
     console.error("Error fetching table:", err.message);
@@ -15,4 +13,4 @@ async function logTable() {
   }
 }
 
-logTable();
+logUsersTable();
