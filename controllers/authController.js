@@ -36,10 +36,12 @@ export const registerUser = async (req, res) => {
       res.status(400).json({ error: "Email or username already in use." });
       return;
     }
-    await db.run(
+    const newUser = await db.run(
       `INSERT INTO users (name, email, username, password) VALUES (?, ?, ?, ?)`,
       [name, email, username, hashedPassword],
     );
+    req.session.userId = newUser.lastID;
+    console.log(newUser);
     res.status(201).json({ message: "User registered" });
   } catch (error) {
     console.error(`Registration failed: ${error.message}`);

@@ -1,11 +1,25 @@
+import "dotenv/config";
 import express from "express";
+import session from "express-session";
 import { authRouter } from "./routes/auth.js";
 import { productsRouter } from "./routes/products.js";
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(
+  session({
+    secret: process.SECRET_SESSION_KEY || "BRUNORENATAJESSICA",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    },
+  }),
+);
 app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
