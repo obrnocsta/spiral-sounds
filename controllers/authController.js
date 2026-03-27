@@ -94,3 +94,9 @@ export const loginUser = async (req, res) => {
     await db.close();
   }
 };
+
+export const logoutUser = async (req, res) => {
+  req.session.destroy(() => {
+    res.json({ message: "Logged out" });
+  });
+};
