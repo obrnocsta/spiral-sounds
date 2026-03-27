@@ -26,3 +26,16 @@ export const add = async ({ productId }, userId) => {
     await db.close();
   }
 };
+
+export const count = async (userId) => {
+  const db = await getDatabaseConnection();
+  try {
+    const quantity = await db.get(
+      `SELECT SUM(quantity) AS totalItems FROM cart_items WHERE user_id = ?`,
+      [userId],
+    );
+    return quantity;
+  } finally {
+    await db.close();
+  }
+};
