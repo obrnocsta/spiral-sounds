@@ -27,7 +27,6 @@ export async function updateCartIcon() {
   try {
     const res = await fetch("/api/cart/cart-count");
     const obj = await res.json();
-    console.log(obj);
     const totalItems = obj.data.totalItems;
 
     document.getElementById("cart-banner").innerHTML =
