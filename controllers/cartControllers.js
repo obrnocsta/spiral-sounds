@@ -1,5 +1,10 @@
-import { parse } from "dotenv";
-import { add, count, all, remove } from "../services/cartServices.js";
+import {
+  add,
+  count,
+  all,
+  removeAll,
+  remove,
+} from "../services/cartServices.js";
 
 export const addToCart = async (req, res) => {
   try {
@@ -23,6 +28,15 @@ export const getAll = async (req, res) => {
   try {
     const items = await all(req.session.userId);
     res.json({ success: true, items: items });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+export const deleteAll = async (req, res) => {
+  try {
+    await removeAll(req.session.userId);
+    res.status(204).send();
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }

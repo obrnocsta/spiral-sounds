@@ -71,6 +71,15 @@ export const all = async (userId) => {
   }
 };
 
+export const removeAll = async (userId) => {
+  const db = await getDatabaseConnection();
+  try {
+    await db.run("DELETE FROM cart_items WHERE user_id = ?", [userId]);
+  } finally {
+    await db.close();
+  }
+};
+
 export const remove = async (userId, { itemId }) => {
   const db = await getDatabaseConnection();
   const id = parseInt(itemId, 10);
