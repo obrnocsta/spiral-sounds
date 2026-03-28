@@ -42,9 +42,6 @@ export const count = async (userId) => {
 };
 
 export const all = async (userId) => {
-  if (!userId) {
-    throw new Error("Not logged in");
-  }
   const db = await getDatabaseConnection();
   try {
     const items = await db.all(

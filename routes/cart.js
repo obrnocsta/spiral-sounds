@@ -6,11 +6,12 @@ import {
   deleteAll,
   deleteItem,
 } from "../controllers/cartControllers.js";
+import { requireAuth } from "../middlewares/authMiddleware.js";
 
 export const cartRouter = express.Router();
 
-cartRouter.post("/add", addToCart);
-cartRouter.get("/cart-count", getCardCount);
-cartRouter.get("/", getAll);
-cartRouter.delete("/all", deleteAll);
-cartRouter.delete("/:itemId", deleteItem);
+cartRouter.post("/add", requireAuth, addToCart);
+cartRouter.get("/cart-count", requireAuth, getCardCount);
+cartRouter.get("/", requireAuth, getAll);
+cartRouter.delete("/all", requireAuth, deleteAll);
+cartRouter.delete("/:itemId", requireAuth, deleteItem);
